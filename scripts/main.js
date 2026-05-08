@@ -22,7 +22,7 @@ async function initContent() {
 
   const faqs = await getJSON('data/faq.json', []);
   const faqList = qs('#faq-list');
-  if (faqList) faqs.forEach(({ q, a }) => { const d = document.createElement('details'); d.className = 'faq-item'; d.innerHTML = `<summary>${q}</summary><p>${a}</p>`; faqList.appendChild(d); });
+  if (faqList) faqs.forEach(({ q, a }) => { const item = document.createElement('article'); item.className = 'faq-item panel'; item.innerHTML = `<h3>${q}</h3><p>${a}</p>`; faqList.appendChild(item); });
 }
 
 async function initGallery() {
@@ -34,6 +34,42 @@ async function initGallery() {
     fig.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}' onerror="this.src='https://picsum.photos/500/700?grayscale'"/><figcaption>${item.title} · ${item.style}</figcaption>`;
     grid.appendChild(fig);
   });
+}
+
+
+
+
+function getWhatsappLink(phone, name, idea) {
+  const cleanPhone = String(phone || '').replace(/\D/g, '');
+  if (!cleanPhone) return '';
+  const text = `Hola, soy ${name}. Quiero cotizar este tatuaje: ${idea}`;
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+}
+
+function initContactForm() {
+  const form = qs('#contact-form');
+  if (!form) return;
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const name = qs('#contact-name')?.value?.trim();
+    const idea = qs('#contact-idea')?.value?.trim();
+    if (!name || !idea) return alert('Completa tu nombre y la idea del tatuaje.');
+    const artist = await getJSON('data/artist.json', null);
+    const link = getWhatsappLink(artist?.whatsapp, name, idea);
+    if (!link) return alert('No fue posible obtener el número de WhatsApp.');
+    window.open(link, '_blank', 'noopener');
+  });
+}
+
+function initContactMap() {
+  const button = qs('#load-map');
+  const map = qs('#studio-map');
+  if (!button || !map) return;
+  button.addEventListener('click', () => {
+    if (!map.src) map.src = map.dataset.src || '';
+    map.style.display = 'block';
+    button.remove();
+  }, { once: true });
 }
 
 async function initPreview() {
@@ -144,3 +180,6 @@ async function initPreview() {
 initContent();
 initGallery();
 initPreview();
+
+initContactMap();
+initContactForm();
