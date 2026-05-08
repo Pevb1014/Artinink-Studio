@@ -46,15 +46,20 @@ async function initGallery() {
     if (!items.length) return;
     const section = document.createElement('section');
     section.className = 'gallery-style panel';
-    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-row'></div>`;
+    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-track'></div>`;
 
-    const row = section.querySelector('.gallery-style-row');
-    items.forEach(item => {
+    const track = section.querySelector('.gallery-style-track');
+    const slides = [...items, ...items];
+
+    slides.forEach((item, index) => {
       const card = document.createElement('figure');
       card.className = 'gallery-style-card';
+      if (index >= items.length) card.setAttribute('aria-hidden', 'true');
       card.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}'/><figcaption>${item.title}</figcaption>`;
-      row.appendChild(card);
+      track.appendChild(card);
     });
+
+    track.style.setProperty('--gallery-speed', `${Math.max(items.length * 4, 16)}s`);
     root.appendChild(section);
   });
 }
