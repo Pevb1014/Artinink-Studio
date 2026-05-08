@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js?module';
+import * as THREE from 'https://esm.sh/three@0.160.0';
 
 export function createScene(canvas) {
   const scene = new THREE.Scene();
