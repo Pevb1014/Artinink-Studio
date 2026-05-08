@@ -1,13 +1,19 @@
 # Tattoo Artist Platform
 
-## ¿Dónde cargar imágenes y modelos?
-Sí. Debes cargar tus recursos en la carpeta `assets/`:
-- Trabajos de galería: `assets/images/gallery/`
-- Imágenes de branding: `assets/images/branding/`
-- Texturas auxiliares: `assets/images/textures/`
-- Modelos 3D humanos: `assets/models/male.glb` y `assets/models/female.glb`
+## Carga de contenido (modo práctico)
+Para que solo tengas que reemplazar archivos, usa estas rutas fijas:
+- Fotos de galería: `assets/images/gallery/`
+- Modelos 3D cuerpo completo: `assets/models/male.glb` y `assets/models/female.glb`
+- Branding/texturas: `assets/images/branding/` y `assets/images/textures/`
 
-Luego debes referenciarlos desde `data/*.json` o desde los módulos `scripts/` según corresponda.
+La web carga automáticamente:
+- Información del tatuador desde `data/artist.json`
+- FAQ desde `data/faq.json`
+- Galería desde `data/tattoos.json` (solo cambias rutas de imagen)
+- Modelos 3D desde `assets/models/*.glb` si existen; si no, usa modelo de respaldo.
+
+## Importante sobre "una sola carpeta"
+En sitios estáticos (GitHub Pages) el navegador no puede listar archivos de una carpeta por sí solo. Por eso se usa `data/tattoos.json` como índice automático de imágenes: tú pones archivos en `assets/images/gallery/` y actualizas ese JSON.
 
 ## Desarrollo local
 ```bash
@@ -15,22 +21,13 @@ python3 -m http.server 8080
 ```
 
 ## Estructura modular
-- `src/core`: reglas de negocio
-- `src/services`: casos de uso
-- `src/adapters`: infraestructura e integraciones
-- `src/utils`: helpers reutilizables
-- `scripts/`: capa web/UI
-- `data/`: contenido editable
-- `assets/`: recursos estáticos
-- `docs/`: documentación
+- `src/core`, `src/services`, `src/adapters`, `src/utils`
+- `scripts/` capa web/UI
+- `data/` contenido editable
+- `assets/` recursos estáticos
 
-## Preview 3D actual
-- Selector de cuerpo (male/female)
-- Selector de zona corporal
-- Upload PNG/JPG/WEBP
-- Ajuste de opacidad, escala y rotación
-- Arrastre del tatuaje en canvas
-- Exportación PNG
-
-## Nota
-Para usar modelos reales GLB, coloca `male.glb` y `female.glb` en `assets/models/` y conecta `GLTFLoader` en `scripts/services/modelLoader.js`.
+## Datos actuales
+- Tatuador: Edward Diaz
+- WhatsApp: 573227660365
+- Instagram: @artinink.studio
+- Dirección: Carrera 80 #67-20 Bogota
