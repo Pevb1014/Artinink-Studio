@@ -26,13 +26,36 @@ async function initContent() {
 }
 
 async function initGallery() {
-  const grid = qs('#gallery-grid');
-  if (!grid) return;
+  const root = qs('#gallery-grid');
+  if (!root) return;
   const tattoos = await getJSON('data/tattoos.json', []);
-  tattoos.forEach(item => {
-    const fig = document.createElement('figure');
-    fig.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}' onerror="this.src='https://picsum.photos/500/700?grayscale'"/><figcaption>${item.title} · ${item.style}</figcaption>`;
-    grid.appendChild(fig);
+  const styleDescriptions = {
+    Blackwork: 'Trazos sólidos, alto contraste y piezas con presencia visual fuerte.',
+    Anime: 'Diseños inspirados en personajes, escenas y estética del anime.',
+    Realismo: 'Sombras y detalle para lograr un acabado natural y profundo.',
+    Minimalista: 'Líneas limpias, piezas sutiles y composiciones simples con personalidad.'
+  };
+
+  const byStyle = tattoos.reduce((acc, item) => {
+    if (!item?.style || !item?.image) return acc;
+    (acc[item.style] ||= []).push(item);
+    return acc;
+  }, {});
+
+  Object.entries(byStyle).forEach(([style, items]) => {
+    if (!items.length) return;
+    const section = document.createElement('section');
+    section.className = 'gallery-style panel';
+    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-row'></div>`;
+
+    const row = section.querySelector('.gallery-style-row');
+    items.forEach(item => {
+      const card = document.createElement('figure');
+      card.className = 'gallery-style-card';
+      card.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}'/><figcaption>${item.title}</figcaption>`;
+      row.appendChild(card);
+    });
+    root.appendChild(section);
   });
 }
 

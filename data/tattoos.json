@@ -1,47 +1,14 @@
 [
-  {
-    "title": "Blackwork 01",
-    "style": "Blackwork",
-    "image": "assets/images/gallery/blackwork-01.webp"
-  },
-  {
-    "title": "Anime 01",
-    "style": "Anime",
-    "image": "assets/images/gallery/anime-01.webp"
-  },
-  {
-    "title": "Realismo 01",
-    "style": "Realismo",
-    "image": "assets/images/gallery/realismo-01.webp"
-  },
-  {
-    "title": "Trabajo 01",
-    "style": "General",
-    "image": "assets/images/gallery/descarga.jfif"
-  },
-  {
-    "title": "Trabajo 02",
-    "style": "General",
-    "image": "assets/images/gallery/descarga (1).jfif"
-  },
-  {
-    "title": "Trabajo 03",
-    "style": "General",
-    "image": "assets/images/gallery/descarga (2).jfif"
-  },
-  {
-    "title": "Trabajo 04",
-    "style": "General",
-    "image": "assets/images/gallery/descarga (3).jfif"
-  },
-  {
-    "title": "Trabajo 05",
-    "style": "General",
-    "image": "assets/images/gallery/descarga (4).jfif"
-  },
-  {
-    "title": "Trabajo 06",
-    "style": "General",
-    "image": "assets/images/gallery/descarga (5).jfif"
-  }
+  {"title":"Blackwork 01","style":"Blackwork","image":"assets/images/gallery/blackwork-01.webp"},
+  {"title":"Blackwork 02","style":"Blackwork","image":"assets/images/gallery/blackwork/blackwork-02.jfif"},
+  {"title":"Blackwork 03","style":"Blackwork","image":"assets/images/gallery/blackwork/blackwork-03.jfif"},
+
+  {"title":"Anime 01","style":"Anime","image":"assets/images/gallery/anime-01.webp"},
+  {"title":"Anime 02","style":"Anime","image":"assets/images/gallery/anime/anime-02.jfif"},
+  {"title":"Anime 03","style":"Anime","image":"assets/images/gallery/anime/anime-03.jfif"},
+
+  {"title":"Realismo 01","style":"Realismo","image":"assets/images/gallery/realismo-01.webp"},
+  {"title":"Realismo 02","style":"Realismo","image":"assets/images/gallery/realismo/realismo-02.jfif"},
+
+  {"title":"Minimalista 01","style":"Minimalista","image":"assets/images/gallery/minimalista/minimalista-01.jfif"}
 ]
