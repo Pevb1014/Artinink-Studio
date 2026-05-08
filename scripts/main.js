@@ -22,18 +22,77 @@ async function initContent() {
 
   const faqs = await getJSON('data/faq.json', []);
   const faqList = qs('#faq-list');
-  if (faqList) faqs.forEach(({ q, a }) => { const d = document.createElement('details'); d.className = 'faq-item'; d.innerHTML = `<summary>${q}</summary><p>${a}</p>`; faqList.appendChild(d); });
+  if (faqList) faqs.forEach(({ q, a }) => { const item = document.createElement('article'); item.className = 'faq-item panel'; item.innerHTML = `<h3>${q}</h3><p>${a}</p>`; faqList.appendChild(item); });
 }
 
 async function initGallery() {
-  const grid = qs('#gallery-grid');
-  if (!grid) return;
+  const root = qs('#gallery-grid');
+  if (!root) return;
   const tattoos = await getJSON('data/tattoos.json', []);
-  tattoos.forEach(item => {
-    const fig = document.createElement('figure');
-    fig.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}' onerror="this.src='https://picsum.photos/500/700?grayscale'"/><figcaption>${item.title} · ${item.style}</figcaption>`;
-    grid.appendChild(fig);
+  const styleDescriptions = {
+    Blackwork: 'Trazos sólidos, alto contraste y piezas con presencia visual fuerte.',
+    Anime: 'Diseños inspirados en personajes, escenas y estética del anime.',
+    Realismo: 'Sombras y detalle para lograr un acabado natural y profundo.',
+    Minimalista: 'Líneas limpias, piezas sutiles y composiciones simples con personalidad.'
+  };
+
+  const byStyle = tattoos.reduce((acc, item) => {
+    if (!item?.style || !item?.image) return acc;
+    (acc[item.style] ||= []).push(item);
+    return acc;
+  }, {});
+
+  Object.entries(byStyle).forEach(([style, items]) => {
+    if (!items.length) return;
+    const section = document.createElement('section');
+    section.className = 'gallery-style panel';
+    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-row'></div>`;
+
+    const row = section.querySelector('.gallery-style-row');
+    items.forEach(item => {
+      const card = document.createElement('figure');
+      card.className = 'gallery-style-card';
+      card.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}'/><figcaption>${item.title}</figcaption>`;
+      row.appendChild(card);
+    });
+    root.appendChild(section);
   });
+}
+
+
+
+
+function getWhatsappLink(phone, name, idea) {
+  const cleanPhone = String(phone || '').replace(/\D/g, '');
+  if (!cleanPhone) return '';
+  const text = `Hola, soy ${name}. Quiero cotizar este tatuaje: ${idea}`;
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+}
+
+function initContactForm() {
+  const form = qs('#contact-form');
+  if (!form) return;
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const name = qs('#contact-name')?.value?.trim();
+    const idea = qs('#contact-idea')?.value?.trim();
+    if (!name || !idea) return alert('Completa tu nombre y la idea del tatuaje.');
+    const artist = await getJSON('data/artist.json', null);
+    const link = getWhatsappLink(artist?.whatsapp, name, idea);
+    if (!link) return alert('No fue posible obtener el número de WhatsApp.');
+    window.open(link, '_blank', 'noopener');
+  });
+}
+
+function initContactMap() {
+  const button = qs('#load-map');
+  const map = qs('#studio-map');
+  if (!button || !map) return;
+  button.addEventListener('click', () => {
+    if (!map.src) map.src = map.dataset.src || '';
+    map.style.display = 'block';
+    button.remove();
+  }, { once: true });
 }
 
 async function initPreview() {
@@ -144,3 +203,6 @@ async function initPreview() {
 initContent();
 initGallery();
 initPreview();
+
+initContactMap();
+initContactForm();
