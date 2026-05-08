@@ -42,8 +42,8 @@ async function initPreview() {
   const { THREE, scene, camera, renderer, onResize } = createScene(canvas);
   setupLights(THREE, scene);
   const controls = attachControls(camera, canvas);
-  controls.minDistance = 1.2;
-  controls.maxDistance = 5;
+  controls.minDistance = 0.9;
+  controls.maxDistance = 4.2;
 
   const fallback = new THREE.Mesh(new THREE.CapsuleGeometry(0.45, 1.2, 12, 24), new THREE.MeshStandardMaterial({ color: 0xb0a08f, roughness: 0.9 }));
   scene.add(fallback);
@@ -62,9 +62,9 @@ async function initPreview() {
     const scale = targetSize / maxDim;
     model.scale.setScalar(scale);
     model.position.sub(center.multiplyScalar(scale));
-    model.position.y += 0.1;
+    model.position.y += 0.28;
     controls.target.set(0, 0.65, 0);
-    camera.position.set(0, 1.15, 2.45);
+    camera.position.set(0, 1.25, 2.1);
     controls.update();
   }
 
@@ -105,7 +105,7 @@ async function initPreview() {
     tattoo.position.copy(hit.point);
     if (hit.face?.normal) {
       const n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
-      tattoo.position.addScaledVector(n, 0.01);
+      tattoo.position.addScaledVector(n, 0.0035);
       tattoo.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), n);
     }
     tattoo.rotateZ(Number(qs('#rotation')?.value || 0) * Math.PI / 180);
