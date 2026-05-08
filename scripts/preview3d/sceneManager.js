@@ -1,0 +1,2 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+export function createScene(canvas){const scene=new THREE.Scene();scene.background=new THREE.Color(0x050505);const camera=new THREE.PerspectiveCamera(45,canvas.clientWidth/canvas.clientHeight,.1,100);camera.position.set(0,1.3,3);const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);return {THREE,scene,camera,renderer};}
