@@ -1,1 +1,6 @@
 @media (max-width:1024px){.cols-3{grid-template-columns:1fr 1fr}}@media (max-width:768px){.cols-3{grid-template-columns:1fr}}
+@media (max-width:768px){
+  .nav-toggle{display:inline-block}
+  .menu-sections{display:none;width:100%;flex-direction:column;padding-top:.5rem}
+  .menu-sections.is-open{display:flex}
+}

@@ -8,21 +8,43 @@ import { loadModel } from './services/modelLoader.js';
 
 async function getJSON(path, fallback) { try { const r = await fetch(path); return r.ok ? await r.json() : fallback; } catch { return fallback; } }
 
+function setText(selector, value) {
+  document.querySelectorAll(selector).forEach(node => { node.textContent = value; });
+}
+
 async function initContent() {
   const artist = await getJSON('data/artist.json', null);
   if (artist) {
-    qs('#artist-name') && (qs('#artist-name').textContent = artist.name);
-    qs('#artist-studio') && (qs('#artist-studio').textContent = `${artist.studio} · ${artist.city}`);
-    qs('#artist-specialties') && (qs('#artist-specialties').textContent = artist.specialties.join(', '));
-    qs('#artist-whatsapp') && (qs('#artist-whatsapp').textContent = `WhatsApp: ${artist.whatsapp}`);
-    qs('#artist-instagram') && (qs('#artist-instagram').textContent = `Instagram: ${artist.instagram}`);
-    qs('#artist-address') && (qs('#artist-address').textContent = artist.address);
-    qs('#artist-experience') && (qs('#artist-experience').textContent = artist.experience);
+    setText('#artist-name', artist.name);
+    setText('#artist-studio', `${artist.studio} · ${artist.city}`);
+    setText('#artist-specialties', artist.specialties.join(', '));
+    setText('#artist-whatsapp', `WhatsApp: ${artist.whatsapp}`);
+    setText('#artist-instagram', `Instagram: ${artist.instagram}`);
+    setText('#artist-address, #artist-address-contact', artist.address);
+    setText('#artist-experience', artist.experience);
   }
 
   const faqs = await getJSON('data/faq.json', []);
   const faqList = qs('#faq-list');
   if (faqList) faqs.forEach(({ q, a }) => { const item = document.createElement('article'); item.className = 'faq-item panel'; item.innerHTML = `<h3>${q}</h3><p>${a}</p>`; faqList.appendChild(item); });
+}
+
+function initSectionMenu() {
+  const toggle = qs('#menu-toggle');
+  const menu = qs('#menu-sections');
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
 }
 
 async function initGallery() {
@@ -46,15 +68,20 @@ async function initGallery() {
     if (!items.length) return;
     const section = document.createElement('section');
     section.className = 'gallery-style panel';
-    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-row'></div>`;
+    section.innerHTML = `<header><h2>${style}</h2><p>${styleDescriptions[style] || 'Colección del estilo disponible en el estudio.'}</p></header><div class='gallery-style-track'></div>`;
 
-    const row = section.querySelector('.gallery-style-row');
-    items.forEach(item => {
+    const track = section.querySelector('.gallery-style-track');
+    const slides = [...items, ...items];
+
+    slides.forEach((item, index) => {
       const card = document.createElement('figure');
       card.className = 'gallery-style-card';
+      if (index >= items.length) card.setAttribute('aria-hidden', 'true');
       card.innerHTML = `<img loading='lazy' alt='${item.title}' src='${item.image}'/><figcaption>${item.title}</figcaption>`;
-      row.appendChild(card);
+      track.appendChild(card);
     });
+
+    track.style.setProperty('--gallery-speed', `${Math.max(items.length * 4, 16)}s`);
     root.appendChild(section);
   });
 }
@@ -203,6 +230,7 @@ async function initPreview() {
 initContent();
 initGallery();
 initPreview();
+initSectionMenu();
 
 initContactMap();
 initContactForm();
